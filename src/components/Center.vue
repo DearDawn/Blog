@@ -1,7 +1,7 @@
 
 <template>
-  <div id="content-center">
-    <slot></slot>
+ <div>
+    <div id="content-center" v-if="mode=='read'">
     <h1>标题：{{kk.title==""?"空":kk.title}}</h1>
     <h3>时间：{{kk.data}} 浏览量：{{kk.views}} 星星数：{{kk.stars}}</h3>
     <div id="p">
@@ -15,23 +15,31 @@
     <p>评论：</p>
     <p v-for="(comments,index) in kk.comments" :key="index">{{comments.name}}说：{{comments.comment}}</p>
   </div>
+  <AddBlog v-else/>
+ </div>
 </template>
 
 <script>
 import Data from "./Data.js";
+import AddBlog from "@/components/AddBlog.vue";
 export default {
   name: "content-center",
+  components:{
+    AddBlog
+  },
   data() {
     return {
-      kk: {}
+      kk: {},
+      mode: "read"
     };
   },
   created() {
-    this.kk = { "title": "" };
+    this.kk = { title: "" };
   },
   mounted: function() {
     var _this = this;
     Data.$on("e", function(m) {
+      _this.mode = "read";
       _this.kk.stars++;
       if (m != _this.kk.id) {
         _this.kk.title = "加载中。。。";
@@ -43,11 +51,14 @@ export default {
         }, 1000);
       }
     });
+    Data.$on("add", function() {
+      _this.mode = "write";
+    });
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #content-center {
   height: 100%;
   float: left;

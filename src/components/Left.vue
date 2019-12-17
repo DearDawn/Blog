@@ -1,6 +1,8 @@
 <template>
   <div id="content-left">
     <ul>
+      <li><button @click="addNewBlog">添加新博客</button></li>
+      <li>总条数：</li>
       <li v-for="item in list" :key="item.id" @click="show(item.id)">
         <a href="#">第{{item.id}}篇：{{item.title}}</a>
       </li>
@@ -27,6 +29,8 @@ export default {
   methods: {
     show: function(x) {
       Data.$emit("e", x);
+    },addNewBlog:function(){
+      Data.$emit('add')
     }
   },
   props: {
