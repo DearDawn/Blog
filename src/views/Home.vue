@@ -1,9 +1,7 @@
 <template>
   <div class="home">
-    <Left />
-    <Center>
-      <!-- <img alt="Vue logo" src="../assets/logo.png" />
-      <HelloWorld msg="Welcome to Your Vue.js App" /> -->
+    <Left @showArticle="showArticle" @addingBox="addingBox" ref="left" />
+    <Center @addIndex="addIndex" ref="center">
     </Center>
     <Right />
   </div>
@@ -23,6 +21,17 @@ export default {
     Left,
     Right,
     Center
+  },
+  methods: {
+    showArticle(id) {
+      this.$refs.center.showArticle(id);
+    },
+    addingBox(id) {
+      this.$refs.center.addingBox(id);
+    },
+    addIndex(x) {
+      this.$refs.left.addIndex(x);
+    }
   }
 };
 </script>

@@ -1,10 +1,10 @@
 <template>
   <div id="content-left">
     <ul>
-      <li><button @click="addNewBlog">添加新博客</button></li>
-      <li>总条数：</li>
+      <li @click="adding">添加新博客</li>
+      <li>总条数：{{list.length}}</li>
       <li v-for="item in list" :key="item.id" @click="show(item.id)">
-        <a href="#">第{{item.id}}篇：{{item.title}}</a>
+        第{{item.id}}篇：{{item.title}}
       </li>
     </ul>
   </div>
@@ -12,37 +12,34 @@
 
 <script>
 import Data from "./Data.js";
+import LocalStore from "@/store/localfile.js";
 
 export default {
   name: "content-left",
   data() {
     return {
-      list: this.list
+      list: []
     };
   },
   mounted() {
-    var _this = this;
-    this.axios.get("api/catalog.json").then(res => {
-      _this.list = res.data;
-    });
+    this.list = LocalStore.catalogFetch();
   },
   methods: {
-    show: function(x) {
-      Data.$emit("e", x);
-    },addNewBlog:function(){
-      Data.$emit('add')
-    }
-  },
-  props: {
-    id: Number
-  },
-  watch: {
-    Id() {
-      this.list = [6, 7, 0];
-
-      return {
-        list: []
-      };
+    show(id) {
+      this.$emit("showArticle", id);
+      console.log("我被调用了"+id)
+    },
+    adding(){
+      var _this = this;
+      this.$emit("addingBox",_this.list.length+1)
+    },
+    addIndex(index) {
+      var _this = this;
+      this.list.push(index);
+      LocalStore.catalogSave(_this.list);
+      setTimeout(() => {
+        _this.show(index.id);
+      }, 100);
     }
   }
 };

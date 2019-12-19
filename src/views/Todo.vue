@@ -18,7 +18,7 @@ import LocalStore from "@/store/localfile.js";
 export default {
   data() {
     return {
-      items: LocalStore.fetch(),
+      items: LocalStore.todoFetch(),
       newItem: ""
     };
   },
@@ -26,7 +26,7 @@ export default {
       
     items:function(){
         var _this=this
-      LocalStore.save(_this.items);
+      LocalStore.todoSave(_this.items);
     }
   },
   methods: {

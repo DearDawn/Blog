@@ -1,50 +1,43 @@
 <template>
   <div id="content-center">
-    <h2>添加新博客模式</h2>
-    <br />标题
-    <input type="text" v-model="title" />
-    <br />日期
-    <input type="text" v-model="data" />
-    <br />正文
-    <textarea v-model="content" name="content" id="content" cols="30" rows="10"></textarea>
-    <br />
-    <button @click="addNewBlog">提交</button>
+    <h2>添加新博客{{id}}</h2>
+    <br />标题<input type="text" v-model="title" />
+    <br />正文<textarea v-model="content" id="content"></textarea>
+    <br />标签<input type="text" v-model="tab" />
+    <br />分类<input type="text" v-model="sort" />
+    <button @click="addBlog">提交</button>
   </div>
 </template>
 
 <script>
+import Data from "./Data";
+import LocalStore from "@/store/localfile.js";
+
 export default {
   name: "AddBlog",
   data() {
     return {
       title: "",
-      data: "",
-      content: ""
+      content: "",
+      tab: ["日记", "碎碎念"],
+      sort: "装修日记"
     };
   },
+  props: ["id"],
   methods: {
-    addNewBlog: function() {
-      const data = {
-        id: "1",
-        title: "开工啦！！！",
-        data: "2019-12-16",
-        content:
-          "昨天晚上看了《误杀》，回来之后心情不错，简单搞了一下界面布局，和以前比起来，这次可以说是超快了/(ㄒoㄒ)/~~\n今天上午把组件间传值搞了搞，为了测试还要准备点数据，话说我连编辑器还没弄，只好暂时笨拙地在json里敲我的博客😭",
+    addBlog() {
+      var article = {
+        id: this.id,
+        title: this.title,
+        data: new Date().toLocaleString(),
+        content: this.content,
         views: "0",
         stars: "0",
         tab: ["日记", "碎碎念"],
         sort: "装修日记",
-        comments: [
-          {
-            name: "dodo",
-            comment: "加油呀"
-          },
-          {
-            name: "dodo",
-            comment: "加油呀"
-          }
-        ]
+        comments: []
       };
+      this.$emit("addArticle", article);//保存文章
     }
   }
 };
